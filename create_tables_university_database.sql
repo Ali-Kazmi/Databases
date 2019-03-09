@@ -15,8 +15,6 @@ CREATE DATABASE IF NOT EXISTS university;
 USE university;
 
 /* drop the tables */
-/* I had to ignore the foreign keys here in order to cleanly delete everything. I am not sure
-if this is good practice, but it seems like everything is working */
 SET FOREIGN_KEY_CHECKS=0; 
 DROP TABLE IF EXISTS department;
 DROP TABLE IF EXISTS course;
