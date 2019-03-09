@@ -21,8 +21,6 @@ Query OK, 1 row affected (0.09 sec)
 Database changed
 --------------
 /* drop the tables */
-/* I had to ignore the foreign keys here in order to cleanly delete everything. I am not sure
-if this is good practice, but it seems like everything is working */
 SET FOREIGN_KEY_CHECKS=0
 --------------
 
