@@ -1,0 +1,280 @@
+mysql> \. /Users/ali/Documents/my_scripts/akazmi_project_part2.sql
+--------------
+/* Ali Kazmi 
+	akazmi final project part 2 
+	CS 31A Fall 2018 */
+    USE university
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+    
+    /* query 1 */ 
+    SELECT c.course_id,section_id, t.term_id
+    FROM course c
+    JOIN section s ON s.course_id=c.course_id
+    JOIN term t ON s.term_id=t.term_id
+    WHERE s.term_id='FL17'
+--------------
+
++-----------+------------+---------+
+| course_id | section_id | term_id |
++-----------+------------+---------+
+| AC101     |       1104 | FL17    |
+| CIS253    |       1210 | FL17    |
+| EN100     |       1311 | FL17    |
++-----------+------------+---------+
+3 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 2 */ 
+    UPDATE  course SET title='Introduction to Relational Databases' WHERE course_id='CIS253'
+--------------
+
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+    
+    /* query 3 */ 
+    SELECT r. section_id, course_id, COUNT(student_id) AS 'number of enrollments'
+    FROM registration r
+    JOIN section s ON r.section_id=s.section_id
+    WHERE r.section_id=1205 AND course_id='AC265' 
+    GROUP BY course_id
+--------------
+
++------------+-----------+-----------------------+
+| section_id | course_id | number of enrollments |
++------------+-----------+-----------------------+
+|       1205 | AC265     |                     1 |
++------------+-----------+-----------------------+
+1 row in set (0.00 sec)
+
+--------------
+    
+    /* query 4 */ 
+    SELECT course_id,r.section_id,CONCAT(last_name, ", ", first_name) AS stName
+    FROM registration r
+    JOIN student s ON s.student_id=r.student_id
+    JOIN section se ON r.section_id=se.section_id
+    JOIN faculty f ON se.faculty_id=f.faculty_id
+    WHERE faculty_name='Mobley'
+    ORDER BY section_id
+--------------
+
++-----------+------------+----------------+
+| course_id | section_id | stName         |
++-----------+------------+----------------+
+| CIS253    |       1102 | Diaz, Jose     |
+| CIS253    |       1102 | Miliko, Rajesh |
+| CIS253    |       1208 | Holn, Amir     |
+| CIS253    |       1210 | Lee, Ho        |
+| CIS253    |       1210 | Miliko, Rajesh |
++-----------+------------+----------------+
+5 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 5 */
+    SELECT dept_name, COUNT(faculty_id) AS 'Total instructors' 
+    FROM department d
+    JOIN faculty f ON d.dept_id=f.dept_id
+    GROUP BY dept_name
+--------------
+
++--------------------+-------------------+
+| dept_name          | Total instructors |
++--------------------+-------------------+
+| Computer Science   |                 2 |
+| Telecommunications |                 2 |
+| Accounting         |                 2 |
+| Math and Science   |                 1 |
+| Liberal Arts       |                 1 |
+| English            |                 1 |
++--------------------+-------------------+
+6 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 6 */ 
+    SELECT faculty_id, faculty_name, dept_id
+    FROM faculty
+    WHERE dept_id=1 OR dept_id=3
+--------------
+
++------------+--------------+---------+
+| faculty_id | faculty_name | dept_id |
++------------+--------------+---------+
+|      63395 | Jones        |       1 |
+|      78699 | Mobley       |       1 |
+|      57180 | Sen          |       3 |
+|      97302 | Collins      |       3 |
++------------+--------------+---------+
+4 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 7 */
+    SELECT course_id, section_id, faculty_name 
+    FROM term t
+    JOIN section s ON s.term_id=t.term_id
+    JOIN faculty f ON s.faculty_id=f.faculty_id
+    WHERE term_desc='Winter 2017'
+--------------
+
++-----------+------------+--------------+
+| course_id | section_id | faculty_name |
++-----------+------------+--------------+
+| AC265     |       1101 | Collins      |
+| CIS253    |       1102 | Mobley       |
+| MA150     |       1103 | Rivera       |
++-----------+------------+--------------+
+3 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 8 */ 
+    SELECT first_name,last_name
+    FROM registration r
+    JOIN student s ON r.student_id=s.student_id 
+    JOIN section sec ON sec.section_id=r.section_id
+    WHERE term_id='SP17' AND final_grade='A'
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+    
+    /* query 9 */ 
+	SELECT COUNT(student_id) AS 'total enrolled'
+    FROM registration r
+    JOIN section s ON r.section_id=s.section_id
+    WHERE course_id='AC265' 
+    GROUP BY course_id
+--------------
+
++----------------+
+| total enrolled |
++----------------+
+|              5 |
++----------------+
+1 row in set (0.00 sec)
+
+--------------
+    
+    /* query 10 */ 
+    SELECT title, SUM(l.capacity) AS 'Total Capacity', COUNT(section_id) AS numsections
+    FROM course c
+    JOIN section s ON c.course_id=s.course_id
+	JOIN location l ON l.room_id=s.room_id
+    GROUP BY title
+    HAVING numsections>1
+--------------
+
++--------------------------------------+----------------+-------------+
+| title                                | Total Capacity | numsections |
++--------------------------------------+----------------+-------------+
+| Systems Analysis                     |            125 |           3 |
+| Introduction to Relational Databases |            160 |           4 |
++--------------------------------------+----------------+-------------+
+2 rows in set (0.00 sec)
+
+--------------
+	/* query 11 */   
+    CREATE OR REPLACE VIEW accounting_courses AS 
+		SELECT section_id
+        FROM section s
+        JOIN course c ON c.course_id=s.course_id 
+        JOIN department d ON c.dept_id=d.dept_id 
+        JOIN term t ON s.term_id=t.term_id
+        WHERE dept_name='Accounting' AND s.term_id='WN17'
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+    
+    /* query 12 */ 
+    SELECT course_id,r.section_id,COUNT(student_id) AS total_enrolled
+    FROM registration r
+    JOIN section s ON r.section_id=s.section_id
+    GROUP BY course_id,section_id
+    HAVING total_enrolled>2
+--------------
+
++-----------+------------+----------------+
+| course_id | section_id | total_enrolled |
++-----------+------------+----------------+
+| AC265     |       1206 |              3 |
+| LA123     |       1207 |              3 |
++-----------+------------+----------------+
+2 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 13 */ 
+    SELECT s.section_id,c.course_id,title
+    FROM course c
+    JOIN section s ON s.course_id=c.course_id
+--------------
+
++------------+-----------+--------------------------------------+
+| section_id | course_id | title                                |
++------------+-----------+--------------------------------------+
+|       1104 | AC101     | accounting                           |
+|       1101 | AC265     | Systems Analysis                     |
+|       1205 | AC265     | Systems Analysis                     |
+|       1206 | AC265     | Systems Analysis                     |
+|       1102 | CIS253    | Introduction to Relational Databases |
+|       1208 | CIS253    | Introduction to Relational Databases |
+|       1209 | CIS253    | Introduction to Relational Databases |
+|       1210 | CIS253    | Introduction to Relational Databases |
+|       1311 | EN100     | Basic English                        |
+|       1207 | LA123     | English Literature                   |
+|       1103 | MA150     | College Algebra                      |
++------------+-----------+--------------------------------------+
+11 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 14 */
+    SELECT DISTINCT section_id 
+    FROM section s
+    JOIN term t ON s.term_id=t.term_id
+    WHERE s.term_id='SP17'
+--------------
+
++------------+
+| section_id |
++------------+
+|       1205 |
+|       1206 |
+|       1207 |
+|       1208 |
++------------+
+4 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 15 */ 
+    SELECT first_name,last_name,major_name
+    FROM student s
+    JOIN major m ON s.major_id=m.major_id
+--------------
+
++------------+-----------+-----------------------+
+| first_name | last_name | major_name            |
++------------+-----------+-----------------------+
+| Alex       | Rickles   | BS-Computer Science   |
+| Jose       | Diaz      | AAS-Accounting        |
+| Ho         | Lee       | BS-Telecommunications |
+| Rajesh     | Miliko    | BS-Accounting         |
+| Kee        | Tyler     | BS-Computer Science   |
+| Amir       | Holn      | AAS-Computer Science  |
++------------+-----------+-----------------------+
+6 rows in set (0.00 sec)
+
+mysql> \t

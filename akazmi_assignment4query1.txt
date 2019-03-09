@@ -1,0 +1,74 @@
+mysql> \. /Users/ali/Downloads/library database scripts/assignment1query1.sql
+Database changed
+--------------
+/* query 1 */
+Drop table if exists branch_staff
+--------------
+
+Query OK, 0 rows affected (0.08 sec)
+
+--------------
+Drop table if exists computer_staff
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+Drop table if exists staff
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+Drop table if exists computer
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+CREATE TABLE staff (
+    staff_id VARCHAR(50) NOT NULL,
+    fname  VARCHAR(50),
+    lname VARCHAR(50),
+    phone VARCHAR(50),
+    email VARCHAR(50)
+)
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+CREATE TABLE computer_staff (
+	serial_number VARCHAR(50),
+    staff_id VARCHAR(50),
+    date_assigned DATE
+)
+--------------
+
+Query OK, 0 rows affected (0.02 sec)
+
+--------------
+CREATE TABLE branch_staff (
+    branch_ID VARCHAR(50),
+    contact VARCHAR(50),
+    staff_id VARCHAR(50)
+)
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+CREATE TABLE computer(
+    serial_number VARCHAR(50),
+    make VARCHAR(25),
+    model VARCHAR(25),
+    processor_type VARCHAR(25),
+    speed VARCHAR(50),
+    main_memory VARCHAR(25),
+    disk_size VARCHAR(50)
+)
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> \t

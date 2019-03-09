@@ -1,0 +1,306 @@
+mysql> \. /Users/ali/Documents/my_scripts/akazmi_assignment3.sql
+--------------
+/*  Assignment3.sql 
+	Ali Kazmi
+    CS 31A, FALL 2018 */
+    
+    /* Query 0 */
+    SELECT user(), current_date()
+--------------
+
++----------------+----------------+
+| user()         | current_date() |
++----------------+----------------+
+| root@localhost | 2018-10-15     |
++----------------+----------------+
+1 row in set (0.00 sec)
+
+--------------
+    /* Query 1 */
+    SELECT last_name, first_name, customer_id
+    FROM customer
+    WHERE (customer_id BETWEEN 22229 AND 66669)
+--------------
+
++-----------+------------+-------------+
+| last_name | first_name | customer_id |
++-----------+------------+-------------+
+| Zimmer    | Barry      |       22229 |
+| Brown     | Christine  |       33339 |
+| Goldstein | David      |       44449 |
+| Valentino | Erin       |       55559 |
+| Wilson    | Frank Lee  |       66669 |
++-----------+------------+-------------+
+5 rows in set (0.00 sec)
+
+--------------
+    
+    /* Query 2 */
+    SELECT first_name,last_name,salary
+    FROM employee
+    WHERE Salary!=(3000) AND Salary!=3400 AND salary!=6000
+--------------
+
++------------+-----------+---------+
+| first_name | last_name | salary  |
++------------+-----------+---------+
+| Marwan     | Lee       | 2800.00 |
+| John       | Alexander | 2500.00 |
+| Mary       | Stuart    | 2800.00 |
+| John       | Griffith  | 4500.00 |
++------------+-----------+---------+
+4 rows in set (0.00 sec)
+
+--------------
+    
+    /* Query 3 */
+    SELECT order_id,order_date,ship_date
+    FROM orders
+    WHERE ship_date IS NULL
+--------------
+
++----------+---------------------+-----------+
+| order_id | order_date          | ship_date |
++----------+---------------------+-----------+
+|        5 | 2015-03-31 05:43:11 | NULL      |
+|        6 | 2015-03-31 18:37:22 | NULL      |
+|        8 | 2015-04-02 11:26:38 | NULL      |
+|        9 | 2015-04-03 12:22:31 | NULL      |
+|       10 | 2015-05-03 12:22:31 | NULL      |
+|       11 | 2015-06-03 12:22:31 | NULL      |
++----------+---------------------+-----------+
+6 rows in set (0.00 sec)
+
+--------------
+    
+    /* Query 4 */
+    SELECT last_name,first_name
+    FROM customer
+    WHERE last_name LIKE '%in%'
+    ORDER BY last_name, first_name
+--------------
+
++-----------+------------+
+| last_name | first_name |
++-----------+------------+
+| Goldstein | David      |
+| Valentino | Erin       |
++-----------+------------+
+2 rows in set (0.00 sec)
+
+--------------
+    
+    /* Query 5 */
+    SELECT product_id,product_name,list_price
+    FROM product
+    WHERE(list_price>30.00 AND list_price<900.00)
+--------------
+
++------------+---------------------+------------+
+| product_id | product_name        | list_price |
++------------+---------------------+------------+
+|       7234 | Classical Music     |      99.99 |
+|       8234 | Pop 3               |      49.99 |
+|      10234 | Z Files             |      49.99 |
+|      14234 | From Another Planet |      49.99 |
+|      16234 | HP Color LaserJet   |     599.00 |
+|      18234 | HP LaserJet Pro     |     200.99 |
+|      19234 | HP LaserJet Pro     |     500.99 |
++------------+---------------------+------------+
+7 rows in set (0.00 sec)
+
+--------------
+    
+    /* Query 6 method 1: range operator */
+    SELECT order_id,order_date,ship_date
+    FROM orders
+    WHERE order_date BETWEEN '2015-03-01' AND '2015-04-01'
+--------------
+
++----------+---------------------+---------------------+
+| order_id | order_date          | ship_date           |
++----------+---------------------+---------------------+
+|        1 | 2015-03-28 09:40:28 | 2015-03-30 15:32:51 |
+|        2 | 2015-03-28 11:23:20 | 2015-03-29 12:52:14 |
+|        3 | 2015-03-29 09:44:58 | 2015-03-31 09:11:41 |
+|        4 | 2015-03-30 15:22:31 | 2015-04-03 16:32:21 |
+|        5 | 2015-03-31 05:43:11 | NULL                |
+|        6 | 2015-03-31 18:37:22 | NULL                |
++----------+---------------------+---------------------+
+6 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 6 method 2: logical operator */
+        SELECT order_id,order_date,ship_date
+    FROM orders
+    WHERE (order_date >'2015-03-01') AND order_date<'2015-04-01'
+--------------
+
++----------+---------------------+---------------------+
+| order_id | order_date          | ship_date           |
++----------+---------------------+---------------------+
+|        1 | 2015-03-28 09:40:28 | 2015-03-30 15:32:51 |
+|        2 | 2015-03-28 11:23:20 | 2015-03-29 12:52:14 |
+|        3 | 2015-03-29 09:44:58 | 2015-03-31 09:11:41 |
+|        4 | 2015-03-30 15:22:31 | 2015-04-03 16:32:21 |
+|        5 | 2015-03-31 05:43:11 | NULL                |
+|        6 | 2015-03-31 18:37:22 | NULL                |
++----------+---------------------+---------------------+
+6 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 6 method 3: a search pattern operator */
+    SELECT order_id,order_date,ship_date
+    FROM orders
+    WHERE (order_date LIKE '2015-03%')
+    ORDER BY order_date
+--------------
+
++----------+---------------------+---------------------+
+| order_id | order_date          | ship_date           |
++----------+---------------------+---------------------+
+|        1 | 2015-03-28 09:40:28 | 2015-03-30 15:32:51 |
+|        2 | 2015-03-28 11:23:20 | 2015-03-29 12:52:14 |
+|        3 | 2015-03-29 09:44:58 | 2015-03-31 09:11:41 |
+|        4 | 2015-03-30 15:22:31 | 2015-04-03 16:32:21 |
+|        5 | 2015-03-31 05:43:11 | NULL                |
+|        6 | 2015-03-31 18:37:22 | NULL                |
++----------+---------------------+---------------------+
+6 rows in set, 1 warning (0.00 sec)
+
+--------------
+    
+    /* Query 7 */
+    SELECT product_id,product_name,product_code
+    FROM product
+   WHERE (product_name LIKE '_e%')AND(product_name LIKE '___l%')
+    ORDER BY product_code DESC
+--------------
+
++------------+-----------------------+--------------+
+| product_id | product_name          | product_code |
++------------+-----------------------+--------------+
+|       6234 | Dell Inspiron 17 5000 | lap9000      |
+|       1234 | Dell XPS 8700         | comp1230     |
++------------+-----------------------+--------------+
+2 rows in set (0.00 sec)
+
+--------------
+    
+    /* Query 8 */
+    SELECT product_id,category_id,vendor_id, list_price
+    FROM product
+    WHERE ((category_id=11) OR (category_id=61))AND(vendor_id IN (2,3))AND(list_price>100)
+--------------
+
++------------+-------------+-----------+------------+
+| product_id | category_id | vendor_id | list_price |
++------------+-------------+-----------+------------+
+|       1234 |          11 |         2 |     999.00 |
+|       2234 |          11 |         2 |    1199.00 |
+|       3234 |          11 |         2 |    2517.00 |
+|       4234 |          11 |         2 |     989.99 |
+|       6234 |          11 |         2 |    1415.00 |
+|       5234 |          11 |         3 |    1299.00 |
++------------+-------------+-----------+------------+
+6 rows in set (0.00 sec)
+
+--------------
+  
+  /* Query 9*/
+  SELECT order_id,customer_id,order_date
+  FROM orders
+  WHERE (ship_date IS NOT null)
+--------------
+
++----------+-------------+---------------------+
+| order_id | customer_id | order_date          |
++----------+-------------+---------------------+
+|        1 |       11119 | 2015-03-28 09:40:28 |
+|        2 |       22229 | 2015-03-28 11:23:20 |
+|        3 |       11119 | 2015-03-29 09:44:58 |
+|        4 |       33339 | 2015-03-30 15:22:31 |
+|        7 |       66669 | 2015-04-01 23:11:12 |
++----------+-------------+---------------------+
+5 rows in set (0.00 sec)
+
+--------------
+    
+    /* Query 10*/
+    INSERT INTO CATEGORY 
+    VALUES ('71',"video game")
+--------------
+
+Query OK, 1 row affected (0.06 sec)
+
+--------------
+    UPDATE CATEGORY 
+    SET category_name="Camera" where (category_id=71)
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+    /* Query 11 */
+INSERT INTO product
+VALUES ('17234',71,'Camera640','Canon','Canon EOS Rebel T5 DSLR Camera',755.99,0,'2015-04-30 13:14:15',2)
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+    /* Query 12 */
+DELETE FROM product
+WHERE category_id= 71
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+DELETE FROM category
+WHERE category_id=71
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+    /* Query 13 */
+    UPDATE orders
+    SET card_type='American Express'
+    WHERE order_id=9
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+    
+    /* Query 14 */
+        UPDATE employee
+    SET salary=6500
+    WHERE salary=6000
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+    /* Query 15*/
+    INSERT INTO customer
+    VALUES(customer_id=99999,email_address="rick@raven.com",password='',first_name="Rick", last_name="Raven",shipping_address_id=NULL,billing_address_id=NULL)
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+    /* Query 16*/
+    ALTER TABLE administrators 
+    RENAME TO ADMINISTRATORS_BACKUP
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> \t

@@ -1,0 +1,266 @@
+mysql> \. /Users/ali/Documents/my_scripts/akazmi_assignment6.sql
+--------------
+/* Assignment6.sql
+	Ali Kazmi 
+	CS31A, Fall 2018 */
+    
+    USE bookstore
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+    
+    /* query 1 */ 
+	SELECT COUNT('order_id'), SUM('tax_amount') 
+    FROM orders
+--------------
+
++-------------------+-------------------+
+| COUNT('order_id') | SUM('tax_amount') |
++-------------------+-------------------+
+|                11 |                 0 |
++-------------------+-------------------+
+1 row in set, 11 warnings (0.00 sec)
+
+--------------
+    
+    /* query 2 */ 
+    SELECT product.product_id, count('quantity') AS NumOrders
+    FROM product 
+    JOIN orderitems o on o.product_id=product.product_id
+    GROUP BY product.product_id
+    ORDER BY NumOrders DESC
+--------------
+
++------------+-----------+
+| product_id | NumOrders |
++------------+-----------+
+|       1234 |         3 |
+|       5234 |         3 |
+|      10234 |         2 |
+|       2234 |         2 |
+|       7234 |         1 |
+|      18234 |         1 |
+|       9234 |         1 |
+|      19234 |         1 |
+|      11234 |         1 |
+|       3234 |         1 |
+|      13234 |         1 |
+|       4234 |         1 |
+|      14234 |         1 |
+|      15234 |         1 |
+|       6234 |         1 |
+|      16234 |         1 |
++------------+-----------+
+16 rows in set (0.00 sec)
+
+--------------
+    
+	/* query 3 */ 
+    SELECT category.category_name, COUNT(p.product_id) AS product_count, MAX(list_price) AS most_expensive_product
+    FROM category
+    JOIN product p ON p.category_id=category.category_id
+    GROUP BY category_name
+    ORDER BY product_count DESC
+--------------
+
++---------------+---------------+------------------------+
+| category_name | product_count | most_expensive_product |
++---------------+---------------+------------------------+
+| Computer      |             6 |                2517.00 |
+| DVD           |             3 |                  49.99 |
+| printer       |             3 |                 599.00 |
+| Video         |             2 |                  49.99 |
+| Book          |             2 |                  30.00 |
+| CD            |             2 |                  99.99 |
++---------------+---------------+------------------------+
+6 rows in set (0.00 sec)
+
+--------------
+    /* query 4 */ 
+  SELECT email_address, (SUM(ord.item_price*ord.quantity)) AS item_price_total,SUM(ord.discount_amount*ord.quantity) AS discount_amount_total
+  FROM customer
+  JOIN orders o ON o.customer_id=customer.customer_id
+  JOIN orderitems ord ON ord.order_id=o.order_id
+  GROUP BY email_address
+  ORDER BY item_price_total DESC
+--------------
+
++-----------------------------+------------------+-----------------------+
+| email_address               | item_price_total | discount_amount_total |
++-----------------------------+------------------+-----------------------+
+| allan.sherwood@yahoo.com    |          6113.98 |               1883.39 |
+| barryz@gmail.com            |          3250.92 |                821.14 |
+| christineb@solarone.com     |          2411.95 |                722.19 |
+| david.goldstein@hotmail.com |          2347.99 |                209.86 |
+| frankwilson@sbcglobal.net   |          1614.97 |                309.22 |
+| erinv@gmail.com             |          1299.00 |                  0.00 |
+| gary_hernandez@yahoo.com    |            49.99 |                  7.49 |
++-----------------------------+------------------+-----------------------+
+7 rows in set (0.00 sec)
+
+--------------
+	
+    /* query 5 */ 
+    SELECT email_address,COUNT(o.order_id) AS order_count,SUM(quantity*(item_price-discount_amount)) AS order_total
+    FROM customer
+    JOIN orders o ON o.customer_id=customer.customer_id
+    JOIN orderitems ord ON o.order_id=ord.order_id
+	GROUP BY email_address
+    HAVING (COUNT(o.order_id)>1)
+   ORDER BY order_total DESC
+--------------
+
++-----------------------------+-------------+-------------+
+| email_address               | order_count | order_total |
++-----------------------------+-------------+-------------+
+| allan.sherwood@yahoo.com    |           5 |     4230.59 |
+| barryz@gmail.com            |           6 |     2429.78 |
+| david.goldstein@hotmail.com |           3 |     2138.13 |
+| christineb@solarone.com     |           2 |     1689.76 |
+| frankwilson@sbcglobal.net   |           4 |     1305.75 |
++-----------------------------+-------------+-------------+
+5 rows in set (0.00 sec)
+
+--------------
+  
+    
+    /* query 6 */ 
+	SELECT email_address,COUNT(o.order_id) AS order_count,SUM(quantity*(item_price-discount_amount)) AS order_total
+    FROM customer
+    JOIN orders o ON o.customer_id=customer.customer_id
+    JOIN orderitems ord ON o.order_id=ord.order_id
+    WHERE item_price>400
+   GROUP BY email_address
+    HAVING (COUNT(o.order_id)>1)
+   ORDER BY order_total DESC
+--------------
+
++-----------------------------+-------------+-------------+
+| email_address               | order_count | order_total |
++-----------------------------+-------------+-------------+
+| allan.sherwood@yahoo.com    |           4 |     4145.59 |
+| barryz@gmail.com            |           3 |     2230.73 |
+| david.goldstein@hotmail.com |           2 |     2098.13 |
+| frankwilson@sbcglobal.net   |           2 |     1224.94 |
++-----------------------------+-------------+-------------+
+4 rows in set (0.00 sec)
+
+--------------
+    
+	/* query 7 */ 
+    SELECT email_address,COUNT(product_id)
+    FROM customer c
+    JOIN orders o ON c.customer_id=o.customer_id
+    JOIN orderitems ord ON o.order_id=ord.order_id
+    GROUP BY email_address
+    HAVING (COUNT(product_id)>1)
+--------------
+
++-----------------------------+-------------------+
+| email_address               | COUNT(product_id) |
++-----------------------------+-------------------+
+| allan.sherwood@yahoo.com    |                 5 |
+| barryz@gmail.com            |                 6 |
+| christineb@solarone.com     |                 2 |
+| david.goldstein@hotmail.com |                 3 |
+| frankwilson@sbcglobal.net   |                 4 |
++-----------------------------+-------------------+
+5 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 8 */ 
+    SELECT vendor.vendor_id, COUNT(*)
+    FROM vendor
+    JOIN product p on p.vendor_id=vendor.vendor_id
+    WHERE list_price>100
+    GROUP BY vendor_id
+--------------
+
++-----------+----------+
+| vendor_id | COUNT(*) |
++-----------+----------+
+|         2 |        5 |
+|         3 |        1 |
+|         5 |        3 |
++-----------+----------+
+3 rows in set (0.00 sec)
+
+--------------
+    
+	/* query 9 */ 
+    SELECT vendor_id,category_id,COUNT(product_id),AVG(list_price)
+    FROM product
+    GROUP BY vendor_id,category_id 
+    HAVING COUNT(product_id)>1
+--------------
+
++-----------+-------------+-------------------+-----------------+
+| vendor_id | category_id | COUNT(product_id) | AVG(list_price) |
++-----------+-------------+-------------------+-----------------+
+|         2 |          11 |                 5 |     1423.998000 |
+|         5 |          41 |                 2 |       24.975000 |
+|         9 |          31 |                 2 |       31.970000 |
+|         5 |          61 |                 3 |      433.660000 |
++-----------+-------------+-------------------+-----------------+
+4 rows in set (0.00 sec)
+
+--------------
+    
+    /* query 10 */ 
+    SELECT COUNT(product_id)
+    FROM product
+    JOIN category ON product.category_id=category.category_id
+    WHERE category_name='printer'
+--------------
+
++-------------------+
+| COUNT(product_id) |
++-------------------+
+|                 3 |
++-------------------+
+1 row in set (0.00 sec)
+
+--------------
+    
+	/* query 11 */ 
+    SELECT (item_price*quantity) AS totalProfit
+    FROM orders
+    JOIN orderitems o on o.order_id=orders.order_id 
+    WHERE customer_id=77779
+--------------
+
++-------------+
+| totalProfit |
++-------------+
+|       49.99 |
++-------------+
+1 row in set (0.00 sec)
+
+--------------
+    
+    /* query 12*/ 
+    SELECT card_number, 
+		LENGTH(card_number) AS card_number_length, 
+		SUBSTR(card_number,-4) AS last_four_digits,
+        CONCAT('XXXX-XXXX-XXXX-',SUBSTR(card_number,-4)) AS formatted_number
+    FROM orders
+    GROUP BY card_number
+--------------
+
++------------------+--------------------+------------------+---------------------+
+| card_number      | card_number_length | last_four_digits | formatted_number    |
++------------------+--------------------+------------------+---------------------+
+| 4111111111111111 |                 16 | 1111             | XXXX-XXXX-XXXX-1111 |
+| 4012888888881881 |                 16 | 1881             | XXXX-XXXX-XXXX-1881 |
+| 378282246310005  |                 15 | 0005             | XXXX-XXXX-XXXX-0005 |
+| 4111111111111333 |                 16 | 1333             | XXXX-XXXX-XXXX-1333 |
+| 6011111111111117 |                 16 | 1117             | XXXX-XXXX-XXXX-1117 |
+| 5555555555554444 |                 16 | 4444             | XXXX-XXXX-XXXX-4444 |
+| 4012888888881991 |                 16 | 1991             | XXXX-XXXX-XXXX-1991 |
++------------------+--------------------+------------------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql> \t
